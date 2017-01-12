@@ -155,6 +155,34 @@ var DataGridRenderer = {
     
     return outputText;
   },
+
+  //---------------------------------------
+  // C# Array of Objects
+  //---------------------------------------
+
+  CSObject : function (dataGrid, headerNames, headerTypes, indent, newLine) {
+    var outputText = "new [] { " + newLine;
+    for (var i = 0; i < dataGrid.length; i++) {
+      var row = dataGrid[i];
+      var rowText = indent + "new {" + newLine;
+      var addComma = true;
+      for (var j = 0; j < headerNames.length; j++) {
+        if(addComma && j == (headerNames.length - 1)) {
+           addComma = false;
+        }
+        if ((headerTypes[j] == "int")||(headerTypes[j] == "float")) {
+          var rowOutput = row[j] || 0;
+        } else {
+          var rowOutput = '"' + ( row[j] || "" ) + '"';
+        };
+        rowText += indent + indent + headerNames[j] + " = " + rowOutput + (addComma ? ',' : '')  + newLine;
+      }
+      rowText += indent + "}," + newLine;
+      outputText += rowText;
+    }
+    outputText += "};"
+    return outputText;
+  },
   
   //---------------------------------------
   // JSON Array of Columns
